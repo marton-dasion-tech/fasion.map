@@ -1,21 +1,23 @@
-//
-//  ContentView.swift
-//  tokyo.fasionmap
-//
-//  Created by 丸山堅也 on 2026/04/29.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showSplash = true
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if showSplash {
+                SplashView()
+            } else {
+                MainTabView()
+            }
         }
-        .padding()
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.8) {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    showSplash = false
+                }
+            }
+        }
     }
 }
 

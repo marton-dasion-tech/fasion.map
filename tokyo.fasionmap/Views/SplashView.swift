@@ -1,7 +1,14 @@
-//
-//  SplashView.swift
-//  tokyo.fasionmap
-//
-//  Created by 丸山堅也 on 2026/04/29.
-//
+import SwiftUI
 
+struct SplashView: View {
+    var body: some View {
+        Image("SplashImage")
+            .resizable()
+            .scaledToFill()
+            .ignoresSafeArea()
+    }
+}
+
+#Preview {
+    SplashView()
+}
