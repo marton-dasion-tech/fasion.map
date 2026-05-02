@@ -61,36 +61,7 @@ struct ChatTopSwitchView: View {
 }
 
 struct ChatListView: View {
-    private let friends: [ChatFriend] = [
-        ChatFriend(
-            name: "AIスタイリスト",
-            lastMessage: "今日はどんな服を探していますか？",
-            timeText: "12:30",
-            unreadCount: 2,
-            iconName: "sparkles"
-        ),
-        ChatFriend(
-            name: "Ken",
-            lastMessage: "原宿の古着屋、今度行こう",
-            timeText: "昨日",
-            unreadCount: 0,
-            iconName: "person.fill"
-        ),
-        ChatFriend(
-            name: "Mika",
-            lastMessage: "このショップかわいい！",
-            timeText: "月曜",
-            unreadCount: 1,
-            iconName: "person.fill"
-        ),
-        ChatFriend(
-            name: "ショップ相談",
-            lastMessage: "おすすめ店舗を紹介できます",
-            timeText: "日曜",
-            unreadCount: 0,
-            iconName: "tshirt.fill"
-        )
-    ]
+    private let friends = MockChats.friends
     
     var body: some View {
         ZStack {
@@ -128,15 +99,6 @@ struct ChatListView: View {
             .listStyle(.plain)
         }
     }
-}
-
-struct ChatFriend: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let lastMessage: String
-    let timeText: String
-    let unreadCount: Int
-    let iconName: String
 }
 
 struct ChatFriendRow: View {
