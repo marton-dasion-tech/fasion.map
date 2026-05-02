@@ -3,7 +3,7 @@ import SwiftUI
 struct ChatRoomView: View {
     let friend: ChatFriend
     
-    private let messages: [ChatMessage] = [
+    @State private var messages: [ChatMessage] = [
         ChatMessage(
             text: "こんにちは！今日はどんな服を探していますか？",
             isUser: false,
@@ -21,23 +21,68 @@ struct ChatRoomView: View {
         )
     ]
     
+    @State private var inputText = ""
+    
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 12) {
-                    ForEach(messages) { message in
-                        ChatMessageBubble(message: message)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(messages) { message in
+                            ChatMessageBubble(message: message)
+                                .id(message.id)
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
+                .onChange(of: messages.count) {
+                    scrollToLatestMessage(proxy: proxy)
+                }
             }
             
-            ChatInputBar()
+            ChatInputBar(
+                inputText: $inputText,
+                onSend: sendMessage
+            )
         }
         .background(Color.white)
         .navigationTitle(friend.name)
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func sendMessage() {
+        let trimmedText = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedText.isEmpty else {
+            return
+        }
+        
+        let newMessage = ChatMessage(
+            text: trimmedText,
+            isUser: true,
+            timeText: currentTimeText()
+        )
+        
+        messages.append(newMessage)
+        inputText = ""
+    }
+    
+    private func currentTimeText() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: Date())
+    }
+    
+    private func scrollToLatestMessage(proxy: ScrollViewProxy) {
+        guard let lastMessage = messages.last else {
+            return
+        }
+        
+        withAnimation {
+            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+        }
     }
 }
 
@@ -81,12 +126,14 @@ struct ChatMessageBubble: View {
 }
 
 struct ChatInputBar: View {
+    @Binding var inputText: String
+    let onSend: () -> Void
+    
     var body: some View {
         HStack(spacing: 10) {
-            Text("メッセージを入力")
+            TextField("メッセージを入力", text: $inputText, axis: .vertical)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1...4)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
                 .background(Color(.systemGray6))
@@ -95,15 +142,16 @@ struct ChatInputBar: View {
                 )
             
             Button {
-                // 今はUIのみ。送信処理は後で実装する。
+                onSend()
             } label: {
                 Image(systemName: "paperplane.fill")
                     .font(.system(size: 16))
                     .foregroundStyle(.white)
                     .frame(width: 42, height: 42)
-                    .background(Color.black)
+                    .background(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.black)
                     .clipShape(Circle())
             }
+            .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
