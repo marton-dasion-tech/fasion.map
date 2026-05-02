@@ -2,19 +2,21 @@ import SwiftUI
 
 struct ProfileView: View {
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                profileHeader
-                
-                followerSection
-                
-                settingsSection
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    profileHeader
+                    
+                    followerSection
+                    
+                    settingsSection
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 24)
+                .padding(.bottom, 32)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 24)
-            .padding(.bottom, 32)
+            .background(Color.white)
         }
-        .background(Color.white)
     }
     
     private var profileHeader: some View {
@@ -78,23 +80,38 @@ struct ProfileView: View {
             Text("個人設定")
                 .font(.headline)
             
-            ProfileSettingRow(
-                iconName: "person.crop.circle",
-                title: "プロフィール編集",
-                subtitle: "名前・アイコン・自己紹介を変更"
-            )
+            NavigationLink {
+                ProfileEditView()
+            } label: {
+                ProfileSettingRow(
+                    iconName: "person.crop.circle",
+                    title: "プロフィール編集",
+                    subtitle: "名前・アイコン・自己紹介を変更"
+                )
+            }
+            .buttonStyle(.plain)
             
-            ProfileSettingRow(
-                iconName: "bell",
-                title: "通知設定",
-                subtitle: "メッセージやショップ通知を管理"
-            )
+            NavigationLink {
+                NotificationSettingsView()
+            } label: {
+                ProfileSettingRow(
+                    iconName: "bell",
+                    title: "通知設定",
+                    subtitle: "メッセージやショップ通知を管理"
+                )
+            }
+            .buttonStyle(.plain)
             
-            ProfileSettingRow(
-                iconName: "lock",
-                title: "プライバシー設定",
-                subtitle: "公開範囲やブロック設定"
-            )
+            NavigationLink {
+                PrivacySettingsView()
+            } label: {
+                ProfileSettingRow(
+                    iconName: "lock",
+                    title: "プライバシー設定",
+                    subtitle: "公開範囲やブロック設定"
+                )
+            }
+            .buttonStyle(.plain)
         }
     }
 }
@@ -119,6 +136,7 @@ struct ProfileSettingRow: View {
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.semibold)
+                    .foregroundStyle(.black)
                 
                 Text(subtitle)
                     .font(.caption)
