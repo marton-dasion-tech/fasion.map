@@ -2,6 +2,8 @@ import SwiftUI
 import MapKit
 
 struct MapHomeView: View {
+    @StateObject private var locationManager = LocationManager()
+    
     @State private var cameraPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -19,36 +21,47 @@ struct MapHomeView: View {
     
     private let shops: [Shop] = [
         Shop(
-            name: "Sample Select Shop",
-            category: "セレクトショップ",
-            area: "原宿エリア",
+            name: "OURET",
+            category: "メンズ・レディース",
+            area: "渋谷・原宿エリア",
             rating: 4.6,
             reviewCount: 128,
             coordinate: CLLocationCoordinate2D(
-                latitude: 35.6712,
-                longitude: 139.7026
+                latitude: 35.6618,
+                longitude: 139.7036
             )
         ),
         Shop(
-            name: "Vintage Tokyo",
-            category: "古着",
-            area: "渋谷エリア",
-            rating: 4.4,
-            reviewCount: 86,
-            coordinate: CLLocationCoordinate2D(
-                latitude: 35.6595,
-                longitude: 139.7005
-            )
-        ),
-        Shop(
-            name: "Mode Street",
-            category: "メンズ・レディース",
-            area: "表参道エリア",
+            name: "LAD MUSICIAN",
+            category: "メンズ",
+            area: "原宿エリア",
             rating: 4.5,
-            reviewCount: 102,
+            reviewCount: 96,
+            coordinate: CLLocationCoordinate2D(
+                latitude: 35.6694,
+                longitude: 139.7064
+            )
+        ),
+        Shop(
+            name: "ATTACHMENT",
+            category: "メンズ",
+            area: "表参道エリア",
+            rating: 4.4,
+            reviewCount: 84,
             coordinate: CLLocationCoordinate2D(
                 latitude: 35.6650,
                 longitude: 139.7121
+            )
+        ),
+        Shop(
+            name: "古着屋サンプル",
+            category: "古着",
+            area: "下北沢エリア",
+            rating: 4.3,
+            reviewCount: 73,
+            coordinate: CLLocationCoordinate2D(
+                latitude: 35.6615,
+                longitude: 139.6689
             )
         )
     ]
@@ -72,6 +85,8 @@ struct MapHomeView: View {
                         Color.black
                         
                         Map(position: $cameraPosition) {
+                            UserAnnotation()
+                            
                             ForEach(shops) { shop in
                                 Annotation(shop.name, coordinate: shop.coordinate) {
                                     Button {
@@ -102,6 +117,11 @@ struct MapHomeView: View {
                                 }
                             }
                         }
+                        .mapControls {
+                            MapUserLocationButton()
+                            MapCompass()
+                            MapScaleView()
+                        }
                         .padding(10)
                     }
                     .padding(.horizontal, 16)
@@ -113,6 +133,9 @@ struct MapHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedShop) { shop in
                 ShopDetailView(shop: shop)
+            }
+            .onAppear {
+                locationManager.requestLocationPermission()
             }
         }
     }
