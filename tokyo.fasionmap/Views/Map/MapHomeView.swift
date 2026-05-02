@@ -2,6 +2,8 @@ import SwiftUI
 import MapKit
 
 struct MapHomeView: View {
+    @StateObject private var locationManager = LocationManager()
+    
     @State private var cameraPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -72,6 +74,8 @@ struct MapHomeView: View {
                         Color.black
                         
                         Map(position: $cameraPosition) {
+                            UserAnnotation()
+                            
                             ForEach(shops) { shop in
                                 Annotation(shop.name, coordinate: shop.coordinate) {
                                     Button {
@@ -102,6 +106,11 @@ struct MapHomeView: View {
                                 }
                             }
                         }
+                        .mapControls {
+                            MapUserLocationButton()
+                            MapCompass()
+                            MapScaleView()
+                        }
                         .padding(10)
                     }
                     .padding(.horizontal, 16)
@@ -113,6 +122,9 @@ struct MapHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedShop) { shop in
                 ShopDetailView(shop: shop)
+            }
+            .onAppear {
+                locationManager.requestLocationPermission()
             }
         }
     }
