@@ -3,24 +3,7 @@ import SwiftUI
 struct ChatRoomView: View {
     let friend: ChatFriend
     
-    @State private var messages: [ChatMessage] = [
-        ChatMessage(
-            text: "こんにちは！今日はどんな服を探していますか？",
-            isUser: false,
-            timeText: "12:30"
-        ),
-        ChatMessage(
-            text: "原宿で古着屋を探したいです",
-            isUser: true,
-            timeText: "12:31"
-        ),
-        ChatMessage(
-            text: "いいですね。原宿周辺なら、セレクトショップや古着屋を地図で探せます。",
-            isUser: false,
-            timeText: "12:32"
-        )
-    ]
-    
+    @State private var messages: [ChatMessage] = MockChats.initialMessages
     @State private var inputText = ""
     @State private var isReplying = false
     
@@ -140,13 +123,6 @@ struct ChatRoomView: View {
     }
 }
 
-struct ChatMessage: Identifiable {
-    let id = UUID()
-    let text: String
-    let isUser: Bool
-    let timeText: String
-}
-
 struct ChatMessageBubble: View {
     let message: ChatMessage
     
@@ -254,13 +230,7 @@ struct ChatInputBar: View {
 #Preview {
     NavigationStack {
         ChatRoomView(
-            friend: ChatFriend(
-                name: "AIスタイリスト",
-                lastMessage: "今日はどんな服を探していますか？",
-                timeText: "12:30",
-                unreadCount: 2,
-                iconName: "sparkles"
-            )
+            friend: MockChats.friends[0]
         )
     }
 }

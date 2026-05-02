@@ -19,41 +19,7 @@ struct MapHomeView: View {
     
     @State private var selectedShop: Shop?
     
-    private let shops: [Shop] = [
-        Shop(
-            name: "Sample Select Shop",
-            category: "セレクトショップ",
-            area: "原宿エリア",
-            rating: 4.6,
-            reviewCount: 128,
-            coordinate: CLLocationCoordinate2D(
-                latitude: 35.6712,
-                longitude: 139.7026
-            )
-        ),
-        Shop(
-            name: "Vintage Tokyo",
-            category: "古着",
-            area: "渋谷エリア",
-            rating: 4.4,
-            reviewCount: 86,
-            coordinate: CLLocationCoordinate2D(
-                latitude: 35.6595,
-                longitude: 139.7005
-            )
-        ),
-        Shop(
-            name: "Mode Street",
-            category: "メンズ・レディース",
-            area: "表参道エリア",
-            rating: 4.5,
-            reviewCount: 102,
-            coordinate: CLLocationCoordinate2D(
-                latitude: 35.6650,
-                longitude: 139.7121
-            )
-        )
-    ]
+    private let shops = MockShops.shops
     
     var body: some View {
         NavigationStack {
