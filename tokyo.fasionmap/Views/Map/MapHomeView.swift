@@ -1,6 +1,38 @@
 import SwiftUI
+import MapKit
 
 struct MapHomeView: View {
+    @State private var cameraPosition: MapCameraPosition = .region(
+        MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: 35.6712,
+                longitude: 139.7026
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.035,
+                longitudeDelta: 0.035
+            )
+        )
+    )
+    
+    private let shops: [MapShop] = [
+        MapShop(
+            name: "Sample Select Shop",
+            latitude: 35.6712,
+            longitude: 139.7026
+        ),
+        MapShop(
+            name: "Vintage Tokyo",
+            latitude: 35.6595,
+            longitude: 139.7005
+        ),
+        MapShop(
+            name: "Mode Street",
+            latitude: 35.6650,
+            longitude: 139.7121
+        )
+    ]
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -19,24 +51,32 @@ struct MapHomeView: View {
                     ZStack {
                         Color.black
                         
-                        VStack(spacing: 12) {
-                            Image(systemName: "map.fill")
-                                .font(.system(size: 56))
-                                .foregroundStyle(.black)
-                            
-                            Text("Tokyo Map")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundStyle(.black)
-                            
-                            Text("ここに東京のアパレルショップ地図を表示します")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 24)
+                        Map(position: $cameraPosition) {
+                            ForEach(shops) { shop in
+                                Annotation(shop.name, coordinate: shop.coordinate) {
+                                    VStack(spacing: 4) {
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.white)
+                                                .frame(width: 44, height: 44)
+                                                .shadow(radius: 4)
+                                            
+                                            Image(systemName: "tshirt.fill")
+                                                .font(.system(size: 20))
+                                                .foregroundStyle(.black)
+                                        }
+                                        
+                                        Text(shop.name)
+                                            .font(.caption2)
+                                            .fontWeight(.semibold)
+                                            .foregroundStyle(.black)
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 3)
+                                            .background(Color.white)
+                                    }
+                                }
+                            }
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.white)
                         .padding(10)
                     }
                     .padding(.horizontal, 16)
@@ -47,6 +87,20 @@ struct MapHomeView: View {
             .navigationTitle("地図")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+}
+
+struct MapShop: Identifiable {
+    let id = UUID()
+    let name: String
+    let latitude: Double
+    let longitude: Double
+    
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(
+            latitude: latitude,
+            longitude: longitude
+        )
     }
 }
 
