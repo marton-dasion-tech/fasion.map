@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-struct Shop: Identifiable {
+struct Shop: Identifiable, Hashable {
     let id = UUID()
     let name: String
     let category: String
@@ -9,4 +9,12 @@ struct Shop: Identifiable {
     let rating: Double
     let reviewCount: Int
     let coordinate: CLLocationCoordinate2D
+    
+    static func == (lhs: Shop, rhs: Shop) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }

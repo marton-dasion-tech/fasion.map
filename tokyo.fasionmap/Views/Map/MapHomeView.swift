@@ -15,21 +15,41 @@ struct MapHomeView: View {
         )
     )
     
-    private let shops: [MapShop] = [
-        MapShop(
+    @State private var selectedShop: Shop?
+    
+    private let shops: [Shop] = [
+        Shop(
             name: "Sample Select Shop",
-            latitude: 35.6712,
-            longitude: 139.7026
+            category: "セレクトショップ",
+            area: "原宿エリア",
+            rating: 4.6,
+            reviewCount: 128,
+            coordinate: CLLocationCoordinate2D(
+                latitude: 35.6712,
+                longitude: 139.7026
+            )
         ),
-        MapShop(
+        Shop(
             name: "Vintage Tokyo",
-            latitude: 35.6595,
-            longitude: 139.7005
+            category: "古着",
+            area: "渋谷エリア",
+            rating: 4.4,
+            reviewCount: 86,
+            coordinate: CLLocationCoordinate2D(
+                latitude: 35.6595,
+                longitude: 139.7005
+            )
         ),
-        MapShop(
+        Shop(
             name: "Mode Street",
-            latitude: 35.6650,
-            longitude: 139.7121
+            category: "メンズ・レディース",
+            area: "表参道エリア",
+            rating: 4.5,
+            reviewCount: 102,
+            coordinate: CLLocationCoordinate2D(
+                latitude: 35.6650,
+                longitude: 139.7121
+            )
         )
     ]
     
@@ -54,26 +74,31 @@ struct MapHomeView: View {
                         Map(position: $cameraPosition) {
                             ForEach(shops) { shop in
                                 Annotation(shop.name, coordinate: shop.coordinate) {
-                                    VStack(spacing: 4) {
-                                        ZStack {
-                                            Circle()
-                                                .fill(Color.white)
-                                                .frame(width: 44, height: 44)
-                                                .shadow(radius: 4)
+                                    Button {
+                                        selectedShop = shop
+                                    } label: {
+                                        VStack(spacing: 4) {
+                                            ZStack {
+                                                Circle()
+                                                    .fill(Color.white)
+                                                    .frame(width: 44, height: 44)
+                                                    .shadow(radius: 4)
+                                                
+                                                Image(systemName: "tshirt.fill")
+                                                    .font(.system(size: 20))
+                                                    .foregroundStyle(.black)
+                                            }
                                             
-                                            Image(systemName: "tshirt.fill")
-                                                .font(.system(size: 20))
+                                            Text(shop.name)
+                                                .font(.caption2)
+                                                .fontWeight(.semibold)
                                                 .foregroundStyle(.black)
+                                                .padding(.horizontal, 6)
+                                                .padding(.vertical, 3)
+                                                .background(Color.white)
                                         }
-                                        
-                                        Text(shop.name)
-                                            .font(.caption2)
-                                            .fontWeight(.semibold)
-                                            .foregroundStyle(.black)
-                                            .padding(.horizontal, 6)
-                                            .padding(.vertical, 3)
-                                            .background(Color.white)
                                     }
+                                    .buttonStyle(.plain)
                                 }
                             }
                         }
@@ -86,21 +111,10 @@ struct MapHomeView: View {
             }
             .navigationTitle("地図")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(item: $selectedShop) { shop in
+                ShopDetailView(shop: shop)
+            }
         }
-    }
-}
-
-struct MapShop: Identifiable {
-    let id = UUID()
-    let name: String
-    let latitude: Double
-    let longitude: Double
-    
-    var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(
-            latitude: latitude,
-            longitude: longitude
-        )
     }
 }
 
