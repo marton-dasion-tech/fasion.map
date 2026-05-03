@@ -19,7 +19,7 @@ struct MapHomeView: View {
     
     @State private var selectedShop: Shop?
     
-    private let shops = MockShops.shops
+    private let shops = ShopService.fetchShops()
     
     var body: some View {
         NavigationStack {

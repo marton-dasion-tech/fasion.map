@@ -61,7 +61,7 @@ struct TrendTopSwitchView: View {
 }
 
 struct RankingArticleListView: View {
-    private let rankings = MockTrends.rankings
+    private let rankings = TrendService.fetchRankings()
     
     var body: some View {
         ScrollView {
@@ -79,7 +79,7 @@ struct RankingArticleListView: View {
 }
 
 struct TrendArticleListView: View {
-    private let articles = MockTrends.articles
+    private let articles = TrendService.fetchArticles()
     
     var body: some View {
         ScrollView {

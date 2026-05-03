@@ -3,7 +3,7 @@ import SwiftUI
 struct ChatRoomView: View {
     let friend: ChatFriend
     
-    @State private var messages: [ChatMessage] = MockChats.initialMessages
+    @State private var messages: [ChatMessage] = ChatService.fetchInitialMessages()
     @State private var inputText = ""
     @State private var isReplying = false
     
@@ -73,7 +73,7 @@ struct ChatRoomView: View {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
             let reply = ChatMessage(
-                text: mockReplyText(for: userMessage),
+                text: ChatService.makeMockReply(for: userMessage),
                 isUser: false,
                 timeText: currentTimeText()
             )
