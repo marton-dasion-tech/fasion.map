@@ -61,7 +61,7 @@ struct ChatTopSwitchView: View {
 }
 
 struct ChatListView: View {
-    private let friends = MockChats.friends
+    private let friends = ChatService.fetchFriends()
     
     var body: some View {
         ZStack {
